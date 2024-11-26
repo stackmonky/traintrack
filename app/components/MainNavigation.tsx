@@ -10,7 +10,7 @@ import {
   const actions = [
     {
       title: 'View Checklists',
-      href: '#',
+   
       icon: FolderIcon,
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-50',
@@ -18,7 +18,7 @@ import {
     },
     {
       title: 'View my Stats',
-      href: '#',
+     
       icon: ChartBarIcon,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-50',
@@ -26,7 +26,7 @@ import {
     },
     {
       title: 'Resources',
-      href: '#',
+
       icon: BookOpenIcon,
       iconForeground: 'text-sky-700',
       iconBackground: 'bg-sky-50',
@@ -34,7 +34,7 @@ import {
     },
     {
       title: 'Calendar',
-      href: '#',
+
       icon: CalendarIcon,
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-50',
@@ -42,7 +42,7 @@ import {
     },
     {
       title: 'Certificates',
-      href: '#',
+   
       icon: AcademicCapIcon,
       iconForeground: 'text-rose-700',
       iconBackground: 'bg-rose-50',
@@ -50,7 +50,7 @@ import {
     },
     {
       title: 'Application Feedback',
-      href: '#',
+    
       icon: PencilIcon,
       iconForeground: 'text-indigo-700',
       iconBackground: 'bg-indigo-50',
@@ -66,7 +66,7 @@ import {
     return (
       <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
         {actions.map((action, actionIdx) => (
-          <div
+          <button
             key={action.title}
             className={classNames(
               actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
@@ -89,11 +89,11 @@ import {
             </div>
             <div className="mt-8">
               <h3 className="text-base font-semibold text-gray-900">
-                <a href={action.href} className="focus:outline-none">
+                <p className="focus:outline-none">
                   {/* Extend touch target to entire panel */}
                   <span aria-hidden="true" className="absolute inset-0" />
                   {action.title}
-                </a>
+                </p>
               </h3>
               <p className="mt-2 text-sm text-gray-500">
                 {action.description}
@@ -107,7 +107,7 @@ import {
                 <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
               </svg>
             </span>
-          </div>
+          </button>
         ))}
       </div>
     )

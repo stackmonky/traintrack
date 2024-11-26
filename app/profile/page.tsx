@@ -1,7 +1,9 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import AppContext from '../context/appContext'
+
 import {
     Dialog,
     DialogBackdrop,
@@ -22,11 +24,13 @@ import { Bars3Icon } from '@heroicons/react/20/solid'
 import ToDo from '../components/Todo'
 import MainNavigation from '../components/MainNavigation'
 
+
+
 const navigation = [
-    { name: 'Dashboard', href: '#', icon: UserCircleIcon, current: false },
-    { name: 'Trainings', href: '#', icon: FolderIcon, current: false },
-    { name: 'Activity', href: '#', icon: FireIcon, current: false },
-    { name: 'Stats', href: '#', icon: ChartBarSquareIcon, current: false },
+    { name: 'Dashboard', href: '/profile', icon: UserCircleIcon, current: false },
+    { name: 'Checklists', href: '/checklists', icon: FolderIcon, current: false },
+    { name: 'Activity', href: '/profile', icon: FireIcon, current: false },
+    { name: 'Stats', href: '/stats', icon: ChartBarSquareIcon, current: false },
 ]
 const teams = [
     { id: 1, name: 'Recieving', href: '#', initial: 'R', current: false },
@@ -42,12 +46,22 @@ function classNames(...classes: string[]) {
 }
 
 
+
 export default function ProfilePage() {
+    const data = useContext(AppContext);
+
+
+    const dashboard = data.dashboardMenu;
+
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const [dashboard, setDashboard] = useState(true);
+    // const [dashboard, setDashboard] = useState(true);
     const [checklists, setChecklists] = useState(false);
-    const [stats, setstats] = useState(false);
-    const [Resources, setResources] = useState(false);
+    
+    const hideDash = (e:any) => {
+        console.log('event to handle dashboard menu items');
+    }
+
+    console.log(data); 
 
     return (
         <>
