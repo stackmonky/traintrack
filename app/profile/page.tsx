@@ -52,16 +52,10 @@ export default function ProfilePage() {
 
 
     const dashboard = data.dashboardMenu;
+    const checklists = data.checklists;
 
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    // const [dashboard, setDashboard] = useState(true);
-    const [checklists, setChecklists] = useState(false);
     
-    const hideDash = (e:any) => {
-        console.log('event to handle dashboard menu items');
-    }
-
-    console.log(data); 
 
     return (
         <>
