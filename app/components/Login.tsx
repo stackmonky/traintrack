@@ -15,7 +15,7 @@ export default function Login() {
     //   .catch(error => {
     //     console.error('Error fetching data:', error);
     //   });
-    let loginButton = (e:any) => {
+    const loginButton = (e: { preventDefault: () => void; }) => {
         e.preventDefault();
             fetch('https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/login')
       .then(response => response.json())
