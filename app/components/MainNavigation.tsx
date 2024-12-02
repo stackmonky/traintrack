@@ -15,52 +15,46 @@ import {
     {
       id:1,
       title: 'View Checklists',
-   
       icon: FolderIcon,
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-50',
       description: 'Track your progress with interactive checklists. See completed, ongoing, and overdue tasks.'
     },
     {
-      id:1,
+      id:2,
       title: 'View my Stats',
-     
       icon: ChartBarIcon,
       iconForeground: 'text-purple-700',
       iconBackground: 'bg-purple-50',
       description: 'Understand your training journey. Analyze your performance metrics, identify strengths, and areas for improvement.'
     },
     {
-      id:1,
+      id:3,
       title: 'Resources',
-
       icon: BookOpenIcon,
       iconForeground: 'text-sky-700',
       iconBackground: 'bg-sky-50',
       description: 'Access a library of helpful resources, including guides, tutorials, and articles to support your learning.'
     },
     {
-      id:1,
+      id:4,
       title: 'Calendar',
-
       icon: CalendarIcon,
       iconForeground: 'text-yellow-700',
       iconBackground: 'bg-yellow-50',
       description: 'Stay organized with a personalized training calendar. View upcoming deadlines and schedule your learning.'
     },
     {
-      id:1,
+      id:5,
       title: 'Certificates',
-   
       icon: AcademicCapIcon,
       iconForeground: 'text-rose-700',
       iconBackground: 'bg-rose-50',
       description: 'View and download your earned certificates. Showcase your accomplishments and qualifications.'
     },
     {
-      id:1,
+      id:6,
       title: 'Application Feedback',
-    
       icon: PencilIcon,
       iconForeground: 'text-indigo-700',
       iconBackground: 'bg-indigo-50',
@@ -76,19 +70,41 @@ import {
 
     const data = useContext(AppContext);
 
-    const showChecklistPage = (e: React.MouseEventHandler<HT>) => {
+    const showChecklistPage = (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
-      console.log(e.target.id);
-      // console.log('event to handle dashboard menu items');
-  }
-
-    console.log(data, 'main navigation state');
+      const clickedButtonId = e.currentTarget.id;
+      console.log(`${clickedButtonId}`);
+      //change the state of what is shown based on the boolean statement.
+      if(clickedButtonId == '1' ) {
+        
+        console.log('checklists page');
+      }
+      else if(clickedButtonId == '2') {
+        console.log('stats')
+      }
+      else if(clickedButtonId == '3') {
+        console.log('resources')
+      }
+      else if(clickedButtonId == '4') {
+        console.log('calendar')
+      }
+      else if(clickedButtonId == '5') {
+        console.log('certificates')
+      }
+      else if(clickedButtonId == '6') {
+        console.log('feedback')
+      }
+      else(error: any) => {
+        console.log(error)
+      }
+    
+    }
 
     return (
       <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
         {pages.map((page, pageIdx) => (
-          <p
-          id={page.id}
+          <div
+          id={`${page.id}`} // Unique ID for each button
           onClick={showChecklistPage}
             key={page.title}
             className={classNames(
@@ -130,7 +146,7 @@ import {
                 <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
               </svg>
             </span>
-          </p>
+          </div>
         ))}
       </div>
     )
