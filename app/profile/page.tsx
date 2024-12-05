@@ -27,10 +27,10 @@ import MainNavigation from '../components/MainNavigation'
 
 
 const navigation = [
-    { name: 'Dashboard', href: '/profile', icon: UserCircleIcon, current: false },
-    { name: 'Checklists', href: '/checklists', icon: FolderIcon, current: false },
-    { name: 'Activity', href: '/profile', icon: FireIcon, current: false },
-    { name: 'Stats', href: '/stats', icon: ChartBarSquareIcon, current: false },
+    { name: 'Dashboard', icon: UserCircleIcon, current: false },
+    { name: 'Checklists',  icon: FolderIcon, current: false },
+    { name: 'Activity',  icon: FireIcon, current: false },
+    { name: 'Stats', icon: ChartBarSquareIcon, current: false },
 ]
 const teams = [
     { id: 1, name: 'Recieving', href: '#', initial: 'R', current: false },
@@ -94,8 +94,8 @@ export default function ProfilePage() {
                                             <ul role="list" className="-mx-2 space-y-1">
                                                 {navigation.map((item) => (
                                                     <li key={item.name}>
-                                                        <a
-                                                            href={item.href}
+                                                        <button
+                                                        
                                                             className={classNames(
                                                                 item.current
                                                                     ? 'bg-gray-800 text-white'
@@ -105,7 +105,7 @@ export default function ProfilePage() {
                                                         >
                                                             <item.icon aria-hidden="true" className="size-6 shrink-0" />
                                                             {item.name}
-                                                        </a>
+                                                        </button>
                                                     </li>
                                                 ))}
                                             </ul>

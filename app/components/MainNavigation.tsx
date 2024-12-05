@@ -69,6 +69,7 @@ import {
   export default function MainNavigation() {
 
     const data = useContext(AppContext);
+    console.log(data);
 
     const showChecklistPage = (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
@@ -76,7 +77,7 @@ import {
       console.log(`${clickedButtonId}`);
       //change the state of what is shown based on the boolean statement.
       if(clickedButtonId == '1' ) {
-        
+        data.setDashboardMenu(false);
         console.log('checklists page');
       }
       else if(clickedButtonId == '2') {
@@ -103,7 +104,7 @@ import {
     return (
       <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
         {pages.map((page, pageIdx) => (
-          <div
+          <button
           id={`${page.id}`} // Unique ID for each button
           onClick={showChecklistPage}
             key={page.title}
@@ -146,7 +147,7 @@ import {
                 <path d="M20 4h1a1 1 0 00-1-1v1zm-1 12a1 1 0 102 0h-2zM8 3a1 1 0 000 2V3zM3.293 19.293a1 1 0 101.414 1.414l-1.414-1.414zM19 4v12h2V4h-2zm1-1H8v2h12V3zm-.707.293l-16 16 1.414 1.414 16-16-1.414-1.414z" />
               </svg>
             </span>
-          </div>
+          </button>
         ))}
       </div>
     )
