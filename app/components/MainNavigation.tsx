@@ -14,7 +14,7 @@ import {
   const pages = [
     {
       id:1,
-      title: 'View Checklists',
+      title: 'Checklists',
       icon: FolderIcon,
       iconForeground: 'text-teal-700',
       iconBackground: 'bg-teal-50',
@@ -46,7 +46,7 @@ import {
     },
     {
       id:5,
-      title: 'Certificates',
+      title: 'My Certificates',
       icon: AcademicCapIcon,
       iconForeground: 'text-rose-700',
       iconBackground: 'bg-rose-50',
@@ -69,7 +69,6 @@ import {
   export default function MainNavigation() {
 
     const data = useContext(AppContext);
-    console.log(data);
 
     const showChecklistPage = (e: React.MouseEvent<HTMLElement>) => {
       e.preventDefault();
@@ -78,7 +77,8 @@ import {
       //change the state of what is shown based on the boolean statement.
       if(clickedButtonId == '1' ) {
         data.setDashboardMenu(false);
-        console.log('checklists page');
+        data.setCheckListsMenu(true);
+        
       }
       else if(clickedButtonId == '2') {
         console.log('stats')

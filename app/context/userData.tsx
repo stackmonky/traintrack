@@ -1,17 +1,31 @@
 const Users = {
     "id": 1,
+    "role": "trainee",
     "name": "John Doe",
     "email": "johndoe@example.com",
-    "phone_number": "+1234567890",
-    "address": {
-      "street": "123 Main St",
-      "city": "Anytown",
-      "state": "CA",
-      "zip": "12345"
-    },
-    "is_active": true,
-    "created_at": "2023-11-26T11:12:32Z",
-    "updated_at": "2023-11-26T11:12:32Z"
+    "checklists": [
+      {
+        "id": 1,
+        "checklist_name": "Safety Checklist",
+        "tasks": [
+          {
+            "id": 1,
+            "task": "Person knows how to hit the safety stop button",
+            "trainee_checked": false,
+            "trainer_checked" : false,
+            "auditor_checked" : false,
+          },
+          {
+            "id": 2,
+            "task": "Person knows where kevlar gloves are located",
+            "trainee_checked": false,
+            "trainer_checked" : false,
+            "auditor_checked" : false,
+          },
+        ]
+        
+      },
+    ]
   }
 
 export default Users;

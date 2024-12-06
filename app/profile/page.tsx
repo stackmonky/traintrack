@@ -8,9 +8,6 @@ import {
     Dialog,
     DialogBackdrop,
     DialogPanel,
-    Menu,
-    MenuItem,
-    MenuItems,
     TransitionChild,
 } from '@headlessui/react'
 import {
@@ -23,14 +20,15 @@ import {
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import ToDo from '../components/Todo'
 import MainNavigation from '../components/MainNavigation'
+import CheckLists from '../components/Checklists'
 
 
 
 const navigation = [
     { name: 'Dashboard', icon: UserCircleIcon, current: false },
-    { name: 'Checklists',  icon: FolderIcon, current: false },
-    { name: 'Activity',  icon: FireIcon, current: false },
-    { name: 'Stats', icon: ChartBarSquareIcon, current: false },
+    { name: 'Checklists', icon: FolderIcon, current: false },
+    // { name: 'Activity', icon: FireIcon, current: false },
+    // { name: 'Stats', icon: ChartBarSquareIcon, current: false },
 ]
 const teams = [
     { id: 1, name: 'Recieving', href: '#', initial: 'R', current: false },
@@ -49,13 +47,71 @@ function classNames(...classes: string[]) {
 
 export default function ProfilePage() {
     const data = useContext(AppContext);
-
-
     const dashboard = data.dashboardMenu;
-    const checklists = data.checklists;
+    const checklists = data.checkListsMenu;
+    const stats = data.statsMenu;
+    const resources = data.resourcesMenu;
+    const calendar = data.calendarMenu;
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const navMenu = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        const clickedButtonId = e.currentTarget.id;
+        //change the state of what is shown based on the boolean statement.
+        if (clickedButtonId == 'Dashboard') {
+            data.setDashboardMenu(true);
+            data.setCheckListsMenu(false);
+            // data.setStatsMenu(false);
+            data.setResourcesMenu(false);
+            data.setCalendarMenu(false);
+        }
+        else if (clickedButtonId == 'Checklists') {
+            data.setDashboardMenu(false);
+            data.setCheckListsMenu(true);
+            // data.setStatsMenu(false);
+            data.setResourcesMenu(false);
+            data.setCalendarMenu(false);
+        }
+        // else if (clickedButtonId == 'Stats') {
+        //     data.setDashboardMenu(false);
+        //     data.setCheckListsMenu(true);
+        //     data.setStatsMenu(false);
+        //     data.setResourcesMenu(false);
+        //     data.setCalendarMenu(false);
+        // }
+        // else if (clickedButtonId == '4') {
+        //     data.setDashboardMenu(false);
+        //     data.setCheckListsMenu(true);
+        //     data.setStatsMenu(false);
+        //     data.setResourcesMenu(false);
+        //     data.setCalendarMenu(false);
+        // }
+        // else if (clickedButtonId == '5') {
+        //     data.setDashboardMenu(false);
+        //     data.setCheckListsMenu(true);
+        //     data.setStatsMenu(false);
+        //     data.setResourcesMenu(false);
+        //     data.setCalendarMenu(false);
+        // }
+        // else if (clickedButtonId == '6') {
+        //     data.setDashboardMenu(false);
+        //     data.setCheckListsMenu(true);
+        //     data.setStatsMenu(false);
+        //     data.setResourcesMenu(false);
+        //     data.setCalendarMenu(false);
+        // }
+        else (error: any) => {
+            console.log(error);
+        }
 
-    const [sidebarOpen, setSidebarOpen] = useState(false)
-    
+    }
+    const renderMenu = () => {
+        if(dashboard){
+            return <MainNavigation />
+        }
+        else if(checklists) {
+            return <CheckLists />
+        }
+    }
 
     return (
         <>
@@ -95,7 +151,8 @@ export default function ProfilePage() {
                                                 {navigation.map((item) => (
                                                     <li key={item.name}>
                                                         <button
-                                                        
+                                                            id={item.name}
+                                                            onClick={navMenu}
                                                             className={classNames(
                                                                 item.current
                                                                     ? 'bg-gray-800 text-white'
@@ -180,10 +237,11 @@ export default function ProfilePage() {
                             <ul role="list" className="flex flex-1 flex-col gap-y-7">
                                 <li>
                                     <ul role="list" className="-mx-2 space-y-1">
-                                        {navigation.map((item) => (
+                                        {navigation.map((item, itemIdx) => (
                                             <li key={item.name}>
-                                                <a
-                                                    href={item.href}
+                                                <button
+                                                    id={item.name}
+                                                    onClick={navMenu}
                                                     className={classNames(
                                                         item.current
                                                             ? 'bg-gray-800 text-white'
@@ -193,7 +251,7 @@ export default function ProfilePage() {
                                                 >
                                                     <item.icon aria-hidden="true" className="size-6 shrink-0" />
                                                     {item.name}
-                                                </a>
+                                                </button>
                                             </li>
                                         ))}
                                     </ul>
@@ -203,8 +261,7 @@ export default function ProfilePage() {
                                     <ul role="list" className="-mx-2 mt-2 space-y-1">
                                         {teams.map((team) => (
                                             <li key={team.name}>
-                                                <a
-                                                    href={team.href}
+                                                <button
                                                     className={classNames(
                                                         team.current
                                                             ? 'bg-gray-800 text-white'
@@ -216,7 +273,7 @@ export default function ProfilePage() {
                                                         {team.initial}
                                                     </span>
                                                     <span className="truncate">{team.name}</span>
-                                                </a>
+                                                </button>
                                             </li>
                                         ))}
                                     </ul>
@@ -226,8 +283,8 @@ export default function ProfilePage() {
                                     <ul role="list" className="-mx-2 mt-2 space-y-1">
                                         {trainers.map((trainer) => (
                                             <li key={trainer.name}>
-                                                <a
-                                                    href={trainer.href}
+                                                <button
+
                                                     className={classNames(
                                                         trainer.current
                                                             ? 'bg-gray-800 text-white'
@@ -239,7 +296,7 @@ export default function ProfilePage() {
                                                         {trainer.initial}
                                                     </span>
                                                     <span className="truncate">{trainer.name}</span>
-                                                </a>
+                                                </button>
                                             </li>
                                         ))}
                                     </ul>
@@ -260,54 +317,17 @@ export default function ProfilePage() {
                     </div>
 
                     <main className="lg:pr-96">
-                        <header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
-                        {dashboard && <MainNavigation />}
-                        {!dashboard && checklists && <h1>test</h1>}
-
-                            {/* Sort dropdown */}
-                            <Menu as="div" className="relative">
-                                <MenuItems
-                                    transition
-                                    className="absolute right-0 z-10 mt-2.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
-                                >
-                                    <MenuItem>
-                                        <a
-                                            href="#"
-                                            className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                                        >
-                                            Name
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a
-                                            href="#"
-                                            className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                                        >
-                                            Date updated
-                                        </a>
-                                    </MenuItem>
-                                    <MenuItem>
-                                        <a
-                                            href="#"
-                                            className="block px-3 py-1 text-sm/6 text-gray-900 data-[focus]:bg-gray-50 data-[focus]:outline-none"
-                                        >
-                                            Environment
-                                        </a>
-                                    </MenuItem>
-                                </MenuItems>
-                            </Menu>
-                        </header>
+                        {renderMenu()}
                     </main>
-
 
                     <aside className="bg-black/10 lg:fixed lg:bottom-0 lg:right-0 lg:top-16 lg:w-96 lg:overflow-y-auto lg:border-l lg:border-white/5">
                         <header className="flex items-center justify-between border-b border-white/5 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
                             <h2 className="text-base/7 font-semibold">To Do</h2>
                         </header>
-                       
-                            <ToDo />
 
-               
+                        <ToDo />
+
+
 
                     </aside>
                 </div>
