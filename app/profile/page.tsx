@@ -1,8 +1,9 @@
 
 'use client'
-
-import { useState, useContext } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState, useContext, useEffect } from 'react'
 import AppContext from '../context/appContext'
+import LogoutButton from '../components/Logout'
 
 import {
     Dialog,
@@ -11,11 +12,9 @@ import {
     TransitionChild,
 } from '@headlessui/react'
 import {
-    ChartBarSquareIcon,
     FolderIcon,
     UserCircleIcon,
     XMarkIcon,
-    FireIcon
 } from '@heroicons/react/24/outline'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import ToDo from '../components/Todo'
@@ -46,12 +45,22 @@ function classNames(...classes: string[]) {
 
 
 export default function ProfilePage() {
+    const router = useRouter();
     const data = useContext(AppContext);
     const dashboard = data.dashboardMenu;
     const checklists = data.checkListsMenu;
     const stats = data.statsMenu;
     const resources = data.resourcesMenu;
     const calendar = data.calendarMenu;
+
+    interface User { // Define the User interface
+        userName: string;
+        firstName: string;
+        department: string;
+        // ... other properties
+    }
+
+    const [user, setUser] = useState<User | null>(null);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const navMenu = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
@@ -71,6 +80,7 @@ export default function ProfilePage() {
             data.setResourcesMenu(false);
             data.setCalendarMenu(false);
         }
+        // use this to set the state for the other options
         // else if (clickedButtonId == 'Stats') {
         //     data.setDashboardMenu(false);
         //     data.setCheckListsMenu(true);
@@ -105,13 +115,31 @@ export default function ProfilePage() {
 
     }
     const renderMenu = () => {
-        if(dashboard){
+        if (dashboard) {
             return <MainNavigation />
         }
-        else if(checklists) {
+        else if (checklists) {
             return <CheckLists />
         }
     }
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token')
+        if (!storedToken) {
+            router.push('/login-page')
+            return
+        }
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const user = JSON.parse(storedUser);
+            setUser(user);
+            console.log(user);
+        } else {
+            // Handle case where user data is not in local storage (e.g., user cleared storage)
+            // You might want to redirect the user to the login page or display an error message
+            console.error("No user data found in local storage. Redirecting to login.");
+            router.push('/login')
+        }
+    }, []);
 
     return (
         <>
@@ -215,6 +243,9 @@ export default function ProfilePage() {
                                             </ul>
 
                                         </li>
+                                        <li>
+                                            <LogoutButton />
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>
@@ -301,6 +332,9 @@ export default function ProfilePage() {
                                         ))}
                                     </ul>
                                 </li>
+                                <li>
+                                    <LogoutButton />
+                                </li>
                             </ul>
                         </nav>
                     </div>
@@ -308,11 +342,18 @@ export default function ProfilePage() {
 
                 <div className="xl:pl-72">
                     {/* Sticky search header */}
-                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-6 border-b border-white/5 bg-gray-900 px-4 shadow-sm sm:px-6 lg:px-8">
+                    <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-6 border-b border-white/5 bg-gray-900 px-4 shadow-sm sm:px-6 lg:px-8 md:flex md:justify-center">
                         <button type="button" onClick={() => setSidebarOpen(true)} className="-m-2.5 p-2.5 text-white xl:hidden">
                             <span className="sr-only">Open sidebar</span>
                             <Bars3Icon aria-hidden="true" className="size-5" />
                         </button>
+                        {user ? (
+
+                            <h1 className='text-white text-center'>Welcome, {user.firstName}!</h1>
+
+                        ) : (
+                            <h1>Loading profile...</h1> // Or a message like "Please log in"
+                        )}
 
                     </div>
 
