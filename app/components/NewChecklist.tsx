@@ -33,13 +33,21 @@ export default function CreateChecklist() {
 
     const handleCreateChecklist = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        console.log(assignedToUser);
 
         try {
             const response = await fetch(newChecklist, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ assignedToUser, department, checklistName }),
+                body: JSON.stringify
+                    ({
+                        assignedToUser,
+                        department,
+                        checklistName,
+                        tasks: [
+                            { taskName: "Task 1", taskDescription: "Description for Task 1" },
+                            { taskName: "Task 2", taskDescription: "Description for Task 2" },
+                        ]
+                    }),
             });
 
             if (!response.ok) {
@@ -64,7 +72,7 @@ export default function CreateChecklist() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-users'); // Replace with your actual user API endpoint
+                const response = await fetch('https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-users');
                 const fetchedUsers = await response.json();
                 setUsers(fetchedUsers);
             } catch (error) {

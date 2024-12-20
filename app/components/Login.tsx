@@ -8,7 +8,8 @@ export default function Login() {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
 
-    const login = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/login"
+    const login = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/login";
+    const checkLists = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-checklists";
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -27,8 +28,22 @@ export default function Login() {
             const data = await response.json();
 
             if (data.success) {
-                localStorage.setItem('token', data.token); // Store the token
+                localStorage.setItem('token', data.token); // Store the token for later better security
                 localStorage.setItem('user', JSON.stringify(data.user)); // Store the user data
+                const checklistResponse = await fetch(checkLists, {
+                    method: "Post",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId: data.user.userId}),
+                });
+                if (checklistResponse.ok) {
+                    const checklistItems = await checklistResponse.json();
+                    // Store the fetched checklists in state (if applicable)
+                    localStorage.setItem('checklists', JSON.stringify(checklistItems)); // Store the checklists locally
+                    // ... 
+                  } else {
+                    console.error('Error fetching checklists:', checklistResponse.status);
+                    // Handle the error (e.g., display an error message to the user)
+                  }
                 router.push("/profile");
             } else {
                 alert("Invalid credentials. Please try again.");

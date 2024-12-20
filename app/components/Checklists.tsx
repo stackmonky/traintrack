@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react'
-import { useContext } from 'react'
-import AppContext from '../context/appContext'
+import {useState, useEffect } from 'react'
+// import { useContext } from 'react'
+// import AppContext from '../context/appContext'
+import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import CreateChecklist from './NewChecklist'
 
 function classNames(...classes: string[]) {
@@ -11,42 +12,84 @@ export default function CheckLists() {
 
 
   const [checklistOpen, setChecklistOpen] = useState(false);
+  const [checklistsData, setChecklistsData] = useState();
 
   const usersApi = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-users";
+  const checkListsUpdate = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-checklists";
 
-const getUsers = async () => {
-  try {
-    const response = await fetch(usersApi);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch users. Status: ${response.status}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    return []; // Return empty array on error
-  }
-};
-
-const openChecklist = async () => {
-  if (checklistOpen) {
-    setChecklistOpen(!checklistOpen);
-  } else {
-    setChecklistOpen(true);
+  const getUsers = async () => {
     try {
-      const fetchedUsers = await getUsers();
-      // Use fetchedUsers here (e.g., display them in a list)
-      console.log("Fetched users:", fetchedUsers);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  }
-};
+      const response = await fetch(usersApi);
 
-  const data = useContext(AppContext);
-  let checklists_data = data.data['checklists'];
-  console.log(checklists_data);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch users. Status: ${response.status}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      return []; // Return empty array on error
+    }
+  };
+
+  const openChecklist = async () => {
+    if (checklistOpen) {
+      setChecklistOpen(!checklistOpen);
+    } else {
+      setChecklistOpen(true);
+      try {
+        const fetchedUsers = await getUsers();
+        // Use fetchedUsers here (e.g., display them in a list)
+        console.log("Fetched users:", fetchedUsers);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    }
+  };
+  const refreshChecklists = async () => {
+    const userString = localStorage.getItem('user'); 
+    if (userString) {
+      const user = JSON.parse(userString); // Parse the stored user object
+      const userId = user.userId; 
+  
+      const checklistResponse = await fetch(checkListsUpdate, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: userId }),
+      });
+  
+      if (checklistResponse.ok) {
+        const checklistItems = await checklistResponse.json();
+        // Store the fetched checklists in state (if applicable)
+        localStorage.setItem('checklists', JSON.stringify(checklistItems));
+        setChecklistsData(checklistItems);
+
+        // ... 
+      } else {
+        console.error('Error fetching checklists:', checklistResponse.status);
+        // Handle the error (e.g., display an error message to the user)
+      }
+    } else {
+      console.error("User data not found in localStorage."); 
+    }
+  };
+
+  useEffect(() => {
+    const checklists_data2 = localStorage.getItem('checklists');
+
+    if (checklists_data2) {
+      try {
+        const parsedChecklists = JSON.parse(checklists_data2);
+        setChecklistsData(parsedChecklists);
+        console.log(parsedChecklists);
+      } catch (error) {
+        console.error("Error parsing checklists data:", error);
+      }
+    } else {
+      console.log("No checklists found in localStorage.");
+    }
+  }, []); // Empty dependency array to run only once after mount
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -56,7 +99,14 @@ const openChecklist = async () => {
             A list of all the users checklists
           </p>
         </div>
-        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+        <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none flex">
+          <button
+            type="button"
+            onClick={refreshChecklists}
+            className='size-6 m-auto mr-8 text-green-500'
+          >
+            <ArrowPathIcon />
+          </button>
           <button
             type="button"
             onClick={openChecklist}
@@ -65,11 +115,11 @@ const openChecklist = async () => {
             New Checklist
           </button>
 
-          { checklistOpen ?(
-          <div className='md:absolute md:right-[400px] md:top-[110px] bg-gray-300 rounded mt-4 '>
-            <CreateChecklist />
-          </div> 
-          ): null
+          {checklistOpen ? (
+            <div className='md:absolute md:right-[400px] md:top-[110px] bg-gray-300 rounded mt-4 '>
+              <CreateChecklist />
+            </div>
+          ) : null
           }
         </div>
       </div>
@@ -97,36 +147,16 @@ const openChecklist = async () => {
                 </tr>
               </thead>
               <tbody className="bg-white">
-                {checklists_data.map((checklist: any) => (
-                  <Fragment key={checklist.id}>
-                    <tr className="border-t border-gray-200">
-                      <th
-                        scope="colgroup"
-                        colSpan={5}
-                        className="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3"
-                      >
-                        {checklist.checklist_name}
-                      </th>
-                    </tr>
-                    {/* {location.people.map((person: { email: boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | Key | null | undefined; name: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; role: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined }, personIdx: number) => (
-                      <tr
-                        key={person.email}
-                        className={classNames(personIdx === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t')}
-                      >
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3">
-                          {person.name}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.title}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.email}</td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.role}</td>
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-3">
-                          <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                            Edit<span className="sr-only">, {person.name}</span>
-                          </a>
-                        </td>
-                      </tr>
-                    ))} */}
-                  </Fragment>
+                {checklistsData && checklistsData.map((checklist: any) => (
+                   <tr key={checklist._id}>
+                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                      {checklist.checklistName}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{checklist.department}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+                    
+                  </tr> 
                 ))}
 
               </tbody>

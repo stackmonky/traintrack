@@ -132,7 +132,6 @@ export default function ProfilePage() {
         if (storedUser) {
             const user = JSON.parse(storedUser);
             setUser(user);
-            console.log(user);
         } else {
             // Handle case where user data is not in local storage (e.g., user cleared storage)
             // You might want to redirect the user to the login page or display an error message
