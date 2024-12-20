@@ -1,6 +1,7 @@
-import { AwaitedReactNode, Fragment, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from 'react'
+import { Fragment, useState } from 'react'
 import { useContext } from 'react'
 import AppContext from '../context/appContext'
+import CreateChecklist from './NewChecklist'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -8,6 +9,40 @@ function classNames(...classes: string[]) {
 
 export default function CheckLists() {
 
+
+  const [checklistOpen, setChecklistOpen] = useState(false);
+
+  const usersApi = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-users";
+
+const getUsers = async () => {
+  try {
+    const response = await fetch(usersApi);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch users. Status: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return []; // Return empty array on error
+  }
+};
+
+const openChecklist = async () => {
+  if (checklistOpen) {
+    setChecklistOpen(!checklistOpen);
+  } else {
+    setChecklistOpen(true);
+    try {
+      const fetchedUsers = await getUsers();
+      // Use fetchedUsers here (e.g., display them in a list)
+      console.log("Fetched users:", fetchedUsers);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  }
+};
 
   const data = useContext(AppContext);
   let checklists_data = data.data['checklists'];
@@ -24,10 +59,18 @@ export default function CheckLists() {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
+            onClick={openChecklist}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             New Checklist
           </button>
+
+          { checklistOpen ?(
+          <div className='md:absolute md:right-[400px] md:top-[110px] bg-gray-300 rounded mt-4 '>
+            <CreateChecklist />
+          </div> 
+          ): null
+          }
         </div>
       </div>
       <div className="mt-8 flow-root">
@@ -85,6 +128,7 @@ export default function CheckLists() {
                     ))} */}
                   </Fragment>
                 ))}
+
               </tbody>
             </table>
           </div>
