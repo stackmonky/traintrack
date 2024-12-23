@@ -57,8 +57,8 @@ export default function Login() {
     return (
         <>
 
-            <form onSubmit={handleSubmit} className="px-6 lg:px-8 lg:py-8 m-auto">
-                <div className="mx-auto max-w-xl lg:mr-0 lg:max-w-lg">
+            <form onSubmit={handleSubmit} className=" lg:px-8 lg:py-8 m-auto ">
+                <div className="mx-auto max-w-xl lg:mr-0 lg:max-w-lg h-40">
                     <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-1">
                         <div>
                             <label htmlFor="username" className="block text-sm/6 font-semibold text-gray-900">
