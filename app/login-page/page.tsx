@@ -10,11 +10,12 @@ export default function LoginPage() {
 
   const [enabled, setEnabled] = useState(false)
   return (
-    <div className="relative isolate h-screen">
+    
+    <div className="relative isolate min-h-screen">
       <div className="mx-auto grid max-w-7xl grid-cols-1 lg:grid-cols-2">
-        <div className="relative px-6 pb-20 pt-24 sm:pt-32 lg:static lg:px-8 lg:py-48">
+        <div className="relative  lg:static lg:px-8 lg:py-48">
           <div className="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
-            <div className="absolute inset-y-0 left-0 -z-10 w-full overflow-hidden bg-gray-100 ring-1 ring-gray-900/10 lg:w-1/2">
+            <div className="absolute inset-y-0 left-0 -z-10 w-full bg-gray-500 border ring-1 ring-gray-900/10 lg:w-1/2">
               <svg
                 aria-hidden="true"
                 className="absolute inset-0 size-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
@@ -58,12 +59,12 @@ export default function LoginPage() {
 
           </div>
         </div>
-        <div className=' flex-col pt-10 md:pt-[50%] pb-10 w-2/3 m-auto h-full'>
+        <div className=' flex-col w-2/3 m-auto h-full md:h-1/2'>
           <Field className="flex items-center m-auto justify-center">
             <Switch
               checked={enabled}
               onChange={setEnabled}
-              className="group relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
+              className="group relative inline-flex w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-gray-200 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 data-[checked]:bg-indigo-600"
             >
               <span
                 aria-hidden="true"
