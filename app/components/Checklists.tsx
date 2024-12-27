@@ -1,6 +1,6 @@
-import {useState, useEffect } from 'react'
-// import { useContext } from 'react'
-// import AppContext from '../context/appContext'
+import { useState, useEffect } from 'react'
+import { useContext } from 'react'
+import AppContext from '../context/appContext'
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import CreateChecklist from './NewChecklist'
 
@@ -10,12 +10,26 @@ function classNames(...classes: string[]) {
 
 export default function CheckLists() {
 
+  const data = useContext(AppContext);
+  const dashboard = data.dashboardMenu;
+  const checklists = data.checkListsMenu;
+  const selectedChecklist = data.selectedChecklist;
+  const stats = data.statsMenu;
+  const resources = data.resourcesMenu;
+  const calendar = data.calendarMenu;
 
   const [checklistOpen, setChecklistOpen] = useState(false);
   const [checklistsData, setChecklistsData] = useState();
 
+
   const usersApi = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-users";
   const checkListsUpdate = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/get-checklists";
+
+  const isTrainer = localStorage.getItem('user');
+  const parsedIsTrainer = isTrainer && JSON.parse(isTrainer)?.isTrainer;
+  console.log(parsedIsTrainer);
+
+
 
   const getUsers = async () => {
     try {
@@ -33,6 +47,7 @@ export default function CheckLists() {
   };
 
   const openChecklist = async () => {
+    console.log(parsedIsTrainer);
     if (checklistOpen) {
       setChecklistOpen(!checklistOpen);
     } else {
@@ -47,19 +62,20 @@ export default function CheckLists() {
     }
   };
   const refreshChecklists = async () => {
-    const userString = localStorage.getItem('user'); 
+    const userString = localStorage.getItem('user');
     if (userString) {
       const user = JSON.parse(userString); // Parse the stored user object
-      const userId = user.userId; 
-  
+      const userId = user.userId;
+
       const checklistResponse = await fetch(checkListsUpdate, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId: userId }),
       });
-  
+
       if (checklistResponse.ok) {
         const checklistItems = await checklistResponse.json();
+        console.log(checklistItems);
         // Store the fetched checklists in state (if applicable)
         localStorage.setItem('checklists', JSON.stringify(checklistItems));
         setChecklistsData(checklistItems);
@@ -70,8 +86,18 @@ export default function CheckLists() {
         // Handle the error (e.g., display an error message to the user)
       }
     } else {
-      console.error("User data not found in localStorage."); 
+      console.error("User data not found in localStorage.");
     }
+  };
+  const handleViewClick = (checklist: any) => {
+    localStorage.setItem('checkListView', JSON.stringify(checklist));
+    data.setDashboardMenu(false);
+    data.setCheckListsMenu(false);
+    data.setSelectedChecklist(true);
+    // data.setStatsMenu(false);
+    data.setResourcesMenu(false);
+    data.setCalendarMenu(false);
+
   };
 
   useEffect(() => {
@@ -81,7 +107,7 @@ export default function CheckLists() {
       try {
         const parsedChecklists = JSON.parse(checklists_data2);
         setChecklistsData(parsedChecklists);
-        console.log(parsedChecklists);
+        console.log(parsedChecklists, 'line 84, parsed checklists');
       } catch (error) {
         console.error("Error parsing checklists data:", error);
       }
@@ -107,13 +133,18 @@ export default function CheckLists() {
           >
             <ArrowPathIcon />
           </button>
-          <button
-            type="button"
-            onClick={openChecklist}
-            className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          >
-            New Checklist
-          </button>
+          {parsedIsTrainer ? (
+            <button
+              type="button"
+              onClick={openChecklist}
+              className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              New Checklist
+            </button>
+          ) : (
+            // Render nothing if isTrainer is false
+            null
+          )}
 
           {checklistOpen ? (
             <div className='md:absolute md:right-[400px] md:top-[110px] bg-gray-300 rounded mt-4 '>
@@ -148,15 +179,20 @@ export default function CheckLists() {
               </thead>
               <tbody className="bg-white">
                 {checklistsData && checklistsData.map((checklist: any) => (
-                   <tr key={checklist._id}>
-                    <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                  <tr key={checklist._id} className='border-b'>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                       {checklist.checklistName}
                     </td>
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{checklist.department}</td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
-                    
-                  </tr> 
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{checklist.trainer}</td>
+                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">...........</td>
+                    <td
+                      onClick={() => handleViewClick(checklist)}
+                      className='text-blue-500 hover:text-blue-300 cursor-pointer select-none hover:underline'
+                    >
+                      View
+                    </td>
+                  </tr>
                 ))}
 
               </tbody>

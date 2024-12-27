@@ -20,6 +20,7 @@ import { Bars3Icon } from '@heroicons/react/20/solid'
 import ToDo from '../components/Todo'
 import MainNavigation from '../components/MainNavigation'
 import CheckLists from '../components/Checklists'
+import Checklist from '../components/Checklist'
 
 
 
@@ -49,6 +50,7 @@ export default function ProfilePage() {
     const data = useContext(AppContext);
     const dashboard = data.dashboardMenu;
     const checklists = data.checkListsMenu;
+    const selectedChecklist = data.selectedChecklist;
     const stats = data.statsMenu;
     const resources = data.resourcesMenu;
     const calendar = data.calendarMenu;
@@ -118,8 +120,13 @@ export default function ProfilePage() {
         if (dashboard) {
             return <MainNavigation />
         }
+        //all checklists
         else if (checklists) {
             return <CheckLists />
+        }
+        //single checklist view
+        else if (selectedChecklist) {
+            return <Checklist />
         }
     }
     useEffect(() => {

@@ -1,6 +1,4 @@
 'use client'
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react';
 import { Label, Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { ChevronUpDownIcon } from '@heroicons/react/16/solid'
@@ -16,7 +14,7 @@ export default function CreateChecklist() {
         'IT',
     ];
     const checklists = [
-        'Safety',
+        'safety',
         'checklist2',
         'checklist3',
         'checklist4',
@@ -27,12 +25,21 @@ export default function CreateChecklist() {
     const [users, setUsers] = useState<any[]>([]) // Initialize with an empty array
     const [department, setDepartment] = useState(departments[0]);
     const [checklistName, setChecklist] = useState(checklists[0]);
-
+    const [trainer, setTrainer] = useState('');
 
     const newChecklist = "https://0b23999f-2284-4048-8b14-45ba440d1afe-00-nyyrzp41cyfe.janeway.replit.dev/create-checklist"
 
     const handleCreateChecklist = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
+        const userString = localStorage.getItem('user');
+
+        if (userString) {
+            const user = JSON.parse(userString); // Parse the stored user object
+            const userName = user.firstName;
+            setTrainer(userName);
+
+        }
+
 
         try {
             const response = await fetch(newChecklist, {
@@ -43,10 +50,7 @@ export default function CreateChecklist() {
                         assignedToUser,
                         department,
                         checklistName,
-                        tasks: [
-                            { taskName: "Task 1", taskDescription: "Description for Task 1" },
-                            { taskName: "Task 2", taskDescription: "Description for Task 2" },
-                        ]
+                        trainer :trainer,
                     }),
             });
 

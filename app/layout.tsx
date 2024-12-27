@@ -30,13 +30,14 @@ export default function RootLayout({
   const [dashboardMenu, setDashboardMenu] = useState(true);
   const [checkListsMenu, setCheckListsMenu] = useState(false);
   const [calendarMenu, setCalendarMenu] = useState(false);
+  const [selectedChecklist, setSelectedChecklist] = useState(false);
 
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
-        <AppContext.Provider value={{ data, setData, dashboardMenu, setDashboardMenu, checkListsMenu, setCheckListsMenu, stats, setStats, resourcesMenu, setResourcesMenu, certificatesMenu, setCertificatesMenu,calendarMenu,setCalendarMenu }}>
+        <AppContext.Provider value={{ data, setData, dashboardMenu, setDashboardMenu, checkListsMenu, setCheckListsMenu, stats, setStats, resourcesMenu, setResourcesMenu, certificatesMenu, setCertificatesMenu,calendarMenu,setCalendarMenu, selectedChecklist, setSelectedChecklist }}>
           {children}
         </AppContext.Provider>
       </body>
